@@ -172,6 +172,7 @@ const bodyParser = require('body-parser');
 const { log } = require('console');
 
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -254,7 +255,9 @@ app.post('/image',upload.single('image'), async (req, res) => {
 } );
 
 app.get('/', (req, res) => {
-  res.render('index.ejs');
+  console.log("OK");
+  
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 app.post('/audio', upload.single('audio'), async (req, res) => {
