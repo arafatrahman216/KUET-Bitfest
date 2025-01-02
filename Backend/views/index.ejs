@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Response Box</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        input[type="text"], input[type="file"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple AI Response</h1>
+
+    <!-- Text Input Form -->
+    <input type="text" id="userInput" placeholder="Type your question here..." />
+    <button onclick="getAIResponse()">Get Response</button>
+    <div id="response"></div>
+
+    <hr>
+
+    <!-- Image Upload Form -->
+    <h2>Upload an Image for AI Analysis</h2>
+    <form id="imageForm">
+        <input type="file" id="imageInput" accept="image/*" required />
+        <button type="submit">Upload Image</button>
+    </form>
+    <div id="imageResponse"></div>
+
+    <hr>
+
+    <!-- Audio Upload Form -->
+    <h2>Upload an Audio File for AI Analysis</h2>
+    <form id="audioForm">
+        <input type="file" id="audioInput" accept="audio/*" required />
+        <button type="submit">Upload Audio</button>
+    </form>
+    <div id="audioResponse"></div>
+
+    <script>
+        function getAIResponse() {
+            const input = document.getElementById('userInput').value;
+            const responseBox = document.getElementById('response');
+
+            // Mock AI response logic
+            if (input.trim() === "") {
+                responseBox.textContent = "Please enter a question!";
+                return;
+            }
+
+            // Simulating AI processing
+            responseBox.textContent = "Thinking...";
+            fetch('/ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: input })
+            }).then(response => response.json())
+            .then(data => {
+                setTimeout(() => {
+                    responseBox.innerText = `${data.response}`;
+                }, 100);
+            }).catch(error => {
+                console.error('Error:', error);
+                responseBox.textContent = "An error occurred. Please try again.";
+            });
+        }
+
+        document.getElementById('imageForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const imageInput = document.getElementById('imageInput').files[0];
+            const imageResponse = document.getElementById('imageResponse');
+
+            if (!imageInput) {
+                imageResponse.textContent = "Please select an image to upload!";
+                return;
+            }
+
+            imageResponse.textContent = "Uploading and processing the image...";
+
+            const formData = new FormData();
+            formData.append('image', imageInput);
+
+            try {
+                await fetch('/image', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    imageResponse.innerText = `${data.response}`;
+                }).catch(error => {
+                    console.error('Error:', error);
+                    imageResponse.textContent = "An error occurred. Please try again.";
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                imageResponse.textContent = "An error occurred. Please try again.";
+            }
+        });
+
+        document.getElementById('audioForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const audioInput = document.getElementById('audioInput').files[0];
+            const audioResponse = document.getElementById('audioResponse');
+
+            if (!audioInput) {
+                audioResponse.textContent = "Please select an audio file to upload!";
+                return;
+            }
+
+            audioResponse.textContent = "Uploading and processing the audio...";
+
+            const formData = new FormData();
+            formData.append('audio', audioInput);
+
+            try {
+                await fetch('/audio', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => response.json())
+                .then(data => {
+                    audioResponse.innerText = `${data.response}`;
+                }).catch(error => {
+                    console.error('Error:', error);
+                    audioResponse.textContent = "An error occurred. Please try again.";
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                audioResponse.textContent = "An error occurred. Please try again.2";
+            }
+        });
+    </script>
+</body>
+</html>
