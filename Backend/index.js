@@ -171,7 +171,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { log } = require('console');
 
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 app.use(express.json());
