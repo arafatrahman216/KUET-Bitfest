@@ -11,3 +11,5 @@ node_modules/
 # Ignore environment files
 .env
 
+
+!Backend/
