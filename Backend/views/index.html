@@ -10,20 +10,24 @@
             margin: 20px;
             text-align: center;
         }
-        #response {
+        #response, #imageResponse, #audioResponse {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             min-height: 50px;
+            text-align: left;
+            
         }
-        input[type="text"], input[type="file"] {
-            width: 80%;
+        input[type="text"], input[type="file"] ,textarea {
+            width: 90%;
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
+            display: block;
         }
         button {
+            
             padding: 10px 20px;
             font-size: 16px;
             background-color: #007BFF;
@@ -41,8 +45,10 @@
     <h1>Simple AI Response</h1>
 
     <!-- Text Input Form -->
-    <input type="text" id="userInput" placeholder="Type your question here..." />
+    <textarea id="userInput" placeholder="Type your question here..." rows="3"></textarea>
     <button onclick="getAIResponse()">Get Response</button>
+    <button onclick="clearResponse('response')">Clear</button>
+    <button onclick="copyResponse('response')">Copy</button>
     <div id="response"></div>
 
     <hr>
@@ -52,8 +58,11 @@
     <form id="imageForm">
         <input type="file" id="imageInput" accept="image/*" required />
         <button type="submit">Upload Image</button>
+        <button onclick="clearResponse('imageResponse')">Clear</button>
     </form>
     <div id="imageResponse"></div>
+    <button onclick="copyResponse('imageResponse')">
+        Copy </button>
 
     <hr>
 
@@ -62,10 +71,14 @@
     <form id="audioForm">
         <input type="file" id="audioInput" accept="audio/*" required />
         <button type="submit">Upload Audio</button>
+        <button onclick="clearResponse('audioResponse')">Clear</button>
     </form>
     <div id="audioResponse"></div>
+    <button onclick="copyResponse('audioResponse')">
+        Copy </button>
 
     <script>
+
         function getAIResponse() {
             const input = document.getElementById('userInput').value;
             const responseBox = document.getElementById('response');
@@ -77,7 +90,7 @@
             }
 
             // Simulating AI processing
-            responseBox.textContent = "Thinking...";
+            responseBox.textContent = "Well...Let me think !";
             fetch('/ai', {
                 method: 'POST',
                 headers: {
@@ -87,7 +100,7 @@
             }).then(response => response.json())
             .then(data => {
                 setTimeout(() => {
-                    responseBox.innerText = `${data.response}`;
+                    responseBox.innerHTML = `${data.response}`;
                 }, 100);
             }).catch(error => {
                 console.error('Error:', error);
@@ -158,6 +171,16 @@
                 audioResponse.textContent = "An error occurred. Please try again.2";
             }
         });
+
+        function copyResponse(name){
+            const response = document.getElementById(name);
+            navigator.clipboard.writeText(response.innerText)
+        }
+
+        function clearResponse(name){
+            const response = document.getElementById(name);
+            response.innerText = "";
+        }
     </script>
 </body>
 </html>

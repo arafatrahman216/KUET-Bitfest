@@ -131,7 +131,7 @@ async function initializeChatSession() {
         role: "user",
         parts: [
           {
-            text: "You are a graduate student in the computer science department at a university. Help me understand CS topics. If I say hi, tell me new CS information. Otherwise, answer what I ask for.",
+            text: "You are a graduate student in the computer science department at a university. Help me understand CS topics. If I say hi, tell me new interesting CS information everytime. Otherwise, answer what I ask for.",
           },
         ],
       },
@@ -214,8 +214,16 @@ app.get('/test', async (req, res) => {
 app.post('/ai', async (req, res) => {
   const message = req.body.message;
   const response = await getResponse(message);
-  console.log(response);
-  res.json({ response });
+  const filter = "below lines are only instruction : if there's **something written** in your generated response, replace it with tag <b> and </b>."+
+            "Donot bold the whole text only the main points. "+
+            " if there's * in the text, replace it with tag <i> and </i> "+
+            "if there's _ in the text, replace it with tag <u> and </u>."+
+            "if there's end of line in the text, replace it with <br> tag. "+
+            "donot add these tags in the response, just replace the text with these tags. now sanitize the text. dont write extra text. ";
+
+  const filteredResponse = await getResponse(filter+response);
+  console.log(filteredResponse);
+  res.json({  response: filteredResponse });
 });
 
 app.post('/video', upload.single('video'), (req, res) => {
@@ -244,7 +252,8 @@ app.post('/image',upload.single('image'), async (req, res) => {
       console.log('File uploaded:', req.file);
       const Upfile = await uploadToGeminiBuffer(req.file);
       console.log('Uploaded file:', Upfile);
-      const message = "let you are a prescription reader OCR, read the prescription and tell me what's written in here";
+      const message = "See the image and say what's written in here. If this is a prescription, read the prescription and tell me what's written in here(try to explain in detail, donot write extra alert or warning)";
+      // const message = "let you are a prescription reader OCR, read the prescription and tell me what's written in here";
       const response = await getImageResponse(message, Upfile);
       res.json({ response });
   } catch (error) {
