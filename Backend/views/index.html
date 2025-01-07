@@ -29,6 +29,9 @@
         button {
             
             padding: 10px 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+
             font-size: 16px;
             background-color: #007BFF;
             color: white;
@@ -58,8 +61,8 @@
     <form id="imageForm">
         <input type="file" id="imageInput" accept="image/*" required />
         <button type="submit">Upload Image</button>
-        <button onclick="clearResponse('imageResponse')">Clear</button>
     </form>
+    <button onclick="clearResponse('imageResponse')">Clear</button>
     <div id="imageResponse"></div>
     <button onclick="copyResponse('imageResponse')">
         Copy </button>
@@ -71,8 +74,8 @@
     <form id="audioForm">
         <input type="file" id="audioInput" accept="audio/*" required />
         <button type="submit">Upload Audio</button>
-        <button onclick="clearResponse('audioResponse')">Clear</button>
     </form>
+    <button onclick="clearResponse('audioResponse')">Clear</button>
     <div id="audioResponse"></div>
     <button onclick="copyResponse('audioResponse')">
         Copy </button>
@@ -179,8 +182,10 @@
 
         function clearResponse(name){
             const response = document.getElementById(name);
+            console.log(response);
             response.innerText = "";
         }
+        
     </script>
 </body>
 </html>
