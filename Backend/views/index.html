@@ -54,6 +54,8 @@
         <button type="submit">Upload Image</button>
     </form>
     <div id="imageResponse"></div>
+    <button onclick="copyImageResponse()">
+        CopyImageResponse </button>
 
     <hr>
 
@@ -64,8 +66,11 @@
         <button type="submit">Upload Audio</button>
     </form>
     <div id="audioResponse"></div>
+    <button onclick="copyAudioResponse()">
+        CopyAudioResponse </button>
 
     <script>
+
         function getAIResponse() {
             const input = document.getElementById('userInput').value;
             const responseBox = document.getElementById('response');
@@ -158,6 +163,17 @@
                 audioResponse.textContent = "An error occurred. Please try again.2";
             }
         });
+
+        function copyImageResponse() {
+            const imageResponse = document.getElementById('imageResponse');
+            navigator.clipboard.writeText(imageResponse.innerText)
+            
+        }
+
+        function copyAudioResponse() {
+            const audioResponse = document.getElementById('audioResponse');
+            navigator.clipboard.writeText(audioResponse.innerText)
+        }
     </script>
 </body>
 </html>
