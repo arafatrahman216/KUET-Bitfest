@@ -11,5 +11,6 @@ node_modules/
 # Ignore environment files
 .env
 
-
-!Backend/
+Backend/views/
+!Backend/views/index.html
+Backend/testRecording/
