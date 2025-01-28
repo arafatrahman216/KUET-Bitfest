@@ -6,6 +6,8 @@ const { Readable } = require('stream');
 const os = require("os"); // For temp directory
 const { v4: uuidv4 } = require("uuid"); // For unique filenames
 const { Groq } = require('groq-sdk');
+const cors = require('cors');
+app.use(cors());
 
 require('dotenv').config();
 const groq = new Groq({ apiKey: "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"});
@@ -15,7 +17,7 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@googl
 const vision = require('@google-cloud/vision');
 const { GoogleAIFileManager } = require("@google/generative-ai/server");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const apiKey = process.env.GEMINI_API;
 
 
@@ -283,6 +285,12 @@ app.post('/audio', upload.single('audio'), async (req, res) => {
     console.error('Error handling file upload:', error);
     res.status(500).json({ error: 'Server error' });
   }
+});
+
+app.post('/chat', async (req, res) => {
+  const message = req.body.message;
+  const response = await getResponse(message);
+  res.json({ response });
 });
 
 
