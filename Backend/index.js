@@ -10,7 +10,7 @@ const cors = require('cors');
 app.use(cors());
 
 require('dotenv').config();
-const groq = new Groq({ apiKey: "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"});
+const groq = new Groq({ apiKey: process.env.GROQ_API});
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require("@google/generative-ai");
@@ -227,6 +227,13 @@ app.post('/ai', async (req, res) => {
   console.log(filteredResponse);
   res.json({  response: filteredResponse });
 });
+
+app.post('/talk', async (req, res) => {
+  const message = req.body.message;
+  const response = await getResponse(message);
+  res.json({ response });
+});
+
 
 app.post('/video', upload.single('video'), (req, res) => {
   try {

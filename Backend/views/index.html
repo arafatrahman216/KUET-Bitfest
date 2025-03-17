@@ -92,11 +92,7 @@
     <button onclick="copyResponse('audioResponse')">
         Copy </button>
 
-        <script async type='module' src='https://interfaces.zapier.com/assets/web-components/zapier-interfaces/zapier-interfaces.esm.js'></script>
-        <zapier-interfaces-chatbot-embed is-popup='false' chatbot-id='cm5xpt6cr004msenogu0e94kw' height='600px' width='400px'></zapier-interfaces-chatbot-embed>
 
-
-        {% comment %} <iframe src="https://arafatrahman219.retool.com/apps/Guided%20Tour%20for%20Arafat" width="100%" height="800px"></iframe> {% endcomment %}
         
     <script>
 
@@ -221,6 +217,7 @@
             status.textContent = "Processing audio...";
           } else {
             // Start recording
+            window.speechSynthesis.cancel();
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
     
@@ -233,6 +230,8 @@
               const formData = new FormData();
               audioBuffer = new File([audioBlob], "audio.webm", { type: "audio/webm" });
               formData.append("audio", audioBuffer);
+              mediaRecorder.stream.getTracks().forEach(track => track.stop());
+
     
               // Send audio blob to backend
               try {
@@ -243,6 +242,7 @@
                 const data = await res.json();
                 console.log(data);
                 response.textContent =  data.response;
+                speakText(data.response);
                 status.textContent = "Click 'Start Recording' to begin again.";
               } catch (err) {
                 response.textContent = "An error occurred.";
@@ -256,6 +256,27 @@
             status.textContent = "Recording...";
           }
         });
+        function speakText(text) {
+
+            fetch('/talk', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: text })
+            }).then(response => response.json())
+            .then(data => {
+                const speech = new SpeechSynthesisUtterance();
+                speech.text = data.response;
+                speech.volume = 1;
+                speech.rate = 1;
+                speech.pitch = 1;
+                window.speechSynthesis.speak(speech);
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+          }
       </script>
 </body>
 </html>
